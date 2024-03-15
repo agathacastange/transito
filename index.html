@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semáforo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+       font-family: Arial, sans-serif;
+       background-color: #e9dada;
+       margin: 0;
+       padding: 0;
+       display: flex;
+       flex-direction: column;
+      
+      
+       height: 100vh;
+   }
+   #upImage{
+    /* border: 2px solid tomato; */
+    background-position-x: center;
+    background-position: contain;
+    background-size: 150%;
+    background-repeat: no-repeat;
+    border: none;
+   }
+   .container {
+       background-color: #bb1f1f;
+       padding: 20px;
+       border-radius: 10px;
+       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+       text-align: center;
+       width: 100%;
+       height: 100%;
+       margin: 0px;
+
+       
+      
+   }
+   #imageContainer{
+     height: 100vh;
+     display: flex;
+       justify-content: center;
+       border: none;
+   }
+
+   img{ 
+    border: none;
+    width: 400px;
+    height: 400px;
+    align-items: center;
+   display: flex;
+    
+    justify-self: center;
+    margin: 2% 0,5%;
+    animation: pulse 1s infinite alternate;
+
+   }
+   .traffic-light {
+       display: flex;
+       justify-content: space-around;
+       margin-bottom: 20px;
+   }
+   .light {
+       width: 50px;
+       height: 50px;
+       border-radius: 50%;
+       border: 1px solid #000;
+       margin-bottom: 10px;
+   }
+   .red { background-color: red; }
+   .yellow { background-color: yellow; }
+   .green { background-color: green; }
+
+   /* Adicionando regras de mídia para dispositivos móveis */
+   @media screen and (max-width: 768px) {
+       .container {
+           max-width: 90%;
+       }
+       .light {
+           width: 30px;
+           height: 30px;
+       }
+   }
+   nav{
+       background-color: rgb(132, 129, 129);
+       width: 100%;
+       height: 20%;
+       text-align: center;
+   }
+   @keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+
+
+   </style>
+</head>
+<body >
+    <nav>
+        <p>
+            
+    <h1> CONTROLE DE TRÂNSITO</h1>
+        </p>
+       <br>
+        Bem-vinda!
+        <br>
+        Seu diário: 15/03/2024
+    </nav> 
+    
+    <div id="imageContainer">
+       <img id="upImage" />
+
+      
+    </div>
+   
+ 
+    <script>
+        function carregarImagem(){
+            // alert('oi')
+            fetch('https://niloweb.com.br/transit-room/api/reg_endpoint.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0 && data[0].res && data[0].dia) {
+                        const imagem = document.getElementById('upImage')
+                        const condition = data[0].res;
+                        switch(condition) {
+                            case 'A':
+                                imagem.setAttribute("src", "images/loraxbg.png");
+                                playSound()
+                                break;
+                            case 'B':
+                            imagem.style.backgroundImage = "url('images/raiva.png')";
+                                playSound()
+                                break;
+                               
+                            case 'L':
+                            imagem.style.backgroundImage = "url('images/Pascal.png')";
+                                playSound();
+                                break;
+                            default:
+                                console.error('Condição desconhecida:', condition);
+                        }
+                        document.getElementById('imageContainer').appendChild(imagem);
+                    } else {
+                        console.error('Erro ao carregar imagem da API.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao conectar à API:', error);
+                });
+        }
+        carregarImagem();
+        setInterval(carregarImagem, 4000);
+        function playSound() {
+            const audio = new Audio('audio.mp3');
+            audio.onended = function() {
+            };
+            audio.play();
+        }
+    </script>
+
+</body>
+</html>
